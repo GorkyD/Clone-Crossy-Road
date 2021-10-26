@@ -4,88 +4,51 @@ using UnityEngine;
 
 public class Bounds : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
-
-    private float lerpTime;
-    private float currentLerpTime;
-    private float perc = 1;
-
-    [HideInInspector] public bool justJump;
-    private bool firstInput;
-
-    private Vector3 endPosition;
-    private Vector3 currentPosition;
-
     [SerializeField] private TerrainGenerator terrainGenerator;
+    private Animator anim;
+    private bool isJumping;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+        anim = gameObject.GetComponentInChildren<Animator>();
+
+        if (Input.GetKeyDown(KeyCode.W) && !isJumping)
         {
-            if (perc == 1)
+            anim.SetTrigger("Jump");
+            isJumping = true;
+            float xDifference = 0;
+            if (transform.position.y % 1 != 0)
             {
-                lerpTime = 2;
-                currentLerpTime = 0;
-                firstInput = true;
-                justJump = true;
+                xDifference = Mathf.Round(transform.position.x) - transform.position.x;
             }
+            Move(new Vector3(-xDifference,0,1),new Vector3(0f,0f,0f));
+
+        }
+        else if (Input.GetKeyDown(KeyCode.A) && !isJumping)
+        {
+            Move(new Vector3(-1,0,0),new Vector3(0f,-90f,0f));
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && !isJumping)
+        {
+            Move(new Vector3(1,0,0),new Vector3(0f,90f,0f));
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && !isJumping)
+        {
+            Move(new Vector3(0,0,-1),new Vector3(0f,180f,0f));
         }
 
-        currentPosition = gameObject.transform.position;        
-
-        if (Input.GetKeyDown(KeyCode.W) && endPosition == gameObject.transform.position)
-        {
-            Move(new Vector3(0, 0, 0), new Vector3(transform.position.x, transform.position.y, transform.position.z + 1));
-        }
-        if (Input.GetKeyDown(KeyCode.S) && endPosition == gameObject.transform.position)
-        {
-            Move(new Vector3(0, 180, 0), new Vector3(transform.position.x, transform.position.y, transform.position.z - 1));
-        }
-        if (Input.GetKeyDown(KeyCode.D) && endPosition == gameObject.transform.position)
-        {
-            Move(new Vector3(0, 90, 0), new Vector3(transform.position.x + 1, transform.position.y, transform.position.z));
-        }
-        if (Input.GetKeyDown(KeyCode.A) && endPosition == gameObject.transform.position)
-        {
-            Move(new Vector3(0, -90, 0), new Vector3(transform.position.x - 1, transform.position.y, transform.position.z));
-        }
-
-        if (firstInput == true)
-        {
-            currentLerpTime += Time.deltaTime * 4f;
-            perc = currentLerpTime / lerpTime;
-            gameObject.transform.position = Vector3.Lerp(currentPosition,endPosition,perc);
-            if (perc > 0.8)
-            {
-                perc = 1;
-            }
-            if(Mathf.Round(perc) == 1)
-            { 
-                justJump = false;
-            }
-        }     
-    }
-    private void Move(Vector3 euler, Vector3 position)
-    {
-
-        gameObject.transform.localEulerAngles = euler;
-        endPosition = position;
-        terrainGenerator.SpawnTerrain(false, gameObject.transform.position);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void Move(Vector3 difference,Vector3 angle)
     {
-        if (collision.collider.GetComponent<MovingObject>() != null)
-        {
-            if (collision.collider.GetComponent<MovingObject>().isLog)
-            {
-                transform.parent = collision.collider.transform;
-            }
-        }
-        else
-        {
-            transform.parent = null;
-        }
+        anim.SetTrigger("Jump");
+        isJumping = true;
+        transform.position = (transform.position + difference);
+        transform.rotation = Quaternion.Euler(angle);
+    }
+    public void FinishJump()
+    {
+        isJumping = false;
     }
 }
 

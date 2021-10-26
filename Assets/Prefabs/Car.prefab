@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
+  isLog: 0
 --- !u!114 &-437776351025937197
 MonoBehaviour:
   m_ObjectHideFlags: 0
