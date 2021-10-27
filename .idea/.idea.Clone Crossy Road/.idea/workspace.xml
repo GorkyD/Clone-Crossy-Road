@@ -13,6 +13,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/GameOverScreen.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="1yiR1mLPdFerXqN7LPRBCSGN37J" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -61,7 +64,7 @@
       <option name="presentableId" value="Default" />
       <updated>1632732233902</updated>
       <workItem from="1632732263190" duration="1558000" />
-      <workItem from="1635282342773" duration="3394000" />
+      <workItem from="1635282342773" duration="20602000" />
     </task>
     <servers />
   </component>

@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bounds : MonoBehaviour
 {
     [SerializeField] private TerrainGenerator terrainGenerator;
+    [SerializeField] private AudioSource audioSource;
+    
     private Animator anim;
     private bool isJumping;
 
     private void Update()
     {
-        anim = gameObject.GetComponentInChildren<Animator>();
-
+        anim = gameObject.GetComponent<Animator>();
         if (Input.GetKeyDown(KeyCode.W) && !isJumping)
         {
             anim.SetTrigger("Jump");
@@ -45,7 +44,25 @@ public class Bounds : MonoBehaviour
         isJumping = true;
         transform.position = (transform.position + difference);
         transform.rotation = Quaternion.Euler(angle);
+        audioSource.Play();
+        terrainGenerator.SpawnTerrain(false,transform.position);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.GetComponent<MovingObject>() != null)
+        {
+            if (collision.collider.GetComponent<MovingObject>().isLog)
+            {
+                transform.parent = collision.collider.transform;
+            }
+        }
+        else
+        {
+            transform.parent = null;
+        }
+    }
+    
     public void FinishJump()
     {
         isJumping = false;

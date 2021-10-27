@@ -8,7 +8,8 @@ public class DeathPlayer : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
     }
+
 }
